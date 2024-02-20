@@ -73,8 +73,13 @@ Note: copying a single file from a container into a (renamed) single file on you
 result = client.cp_pod(:single_result, "/home/local-file-renamed.txt", "my-pod", "my-namespace", options: { container: 'my-container', reverse_direction: true })
 ```
 
+**Example: copy directory *from* a container**
+```ruby
+client.cp_pod('.', "/home/interesting-results", "my-pod", "my-namespace", options: { container: 'my-container', reverse_direction: true })
+```
+
 ## Authentication
-Both bearer tokens and user certificates should be supported. However, in case user certificates are used, you should pass the certificate and key *file locations* into `options[:tls][:[:cert_chain_file]` and `options[:tls][:[:private_key_file]` respectively. This is a limitation of EventMachine.
+Both bearer tokens and user certificates should be supported. However, in case user certificates are used, you should pass the certificate and key *file locations* into `options[:tls][:[:cert_chain_file]` and `options[:tls][:private_key_file]` respectively. This is a limitation of EventMachine.
 
 # Troubleshooting
 **Problem:** Nothing is happening, but I don't see an error.
