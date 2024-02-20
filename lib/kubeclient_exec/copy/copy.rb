@@ -9,6 +9,12 @@ module KubeclientExec
     DEFAULT_CP_OPTIONS = {
       container: nil,
       reverse_direction: false,
+      suppress_errors: true,
+      tls: {
+        cert_chain_file: nil,
+        private_key_file: nil,
+        verify_peer: true
+      }
     }
 
     def cp_pod(local_path, remote_path, name, namespace, options: {})
@@ -35,7 +41,7 @@ module KubeclientExec
       tar_file = tar(local_path, remote_path, copy_file)
 
       if copy_file
-        exec_pod("tar xf - -C #{remote_path.split('/')[0...-1].join('/')}", name, namespace, options: { tty: false, container: options[:container] }) do |executor|
+        exec_pod("tar xf - -C #{remote_path.split('/')[0...-1].join('/')}", name, namespace, options: { tty: false }.merge!(options)) do |executor|
           executor.write(tar_file.string)
 
           # Feels like there should be a better way for this
@@ -46,7 +52,7 @@ module KubeclientExec
           end
         end
       else
-        exec_pod("tar xf - -C #{remote_path}", name, namespace, options: { tty: false, container: options[:container] }) do |executor|
+        exec_pod("tar xf - -C #{remote_path}", name, namespace, options: { tty: false }.merge!(options)) do |executor|
           executor.write(tar_file.string)
 
           # Feels like there should be a better way for this
@@ -62,7 +68,7 @@ module KubeclientExec
     def cp_from_pod(local_path, remote_path, name, namespace, options)
       result = nil
 
-      exec_pod("tar cf - #{remote_path}", name, namespace, options: { tty: false, container: options[:container] }) do |executor|
+      exec_pod("tar cf - #{remote_path}", name, namespace, options: { tty: false }.merge!(options)) do |executor|
         count = 0
 
         executor.on_stdout do |data|

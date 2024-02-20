@@ -11,6 +11,11 @@ module KubeclientExec
       stderror: true,
       tty: true,
       suppress_errors: true,
+      tls: {
+        cert_chain_file: nil,
+        private_key_file: nil,
+        verify_peer: true
+      }
     }
 
     def exec_pod(command, name, namespace, options: {}, &block)
@@ -21,7 +26,9 @@ module KubeclientExec
       # Reverse merge with the default options
       options.merge!(Execute::DEFAULT_EXEC_OPTIONS) { |_, option, _| option }
 
-      url.query = (options.filter { |k| k != :suppress_errors }.compact.map { |k, v| "#{k}=#{v}"} << command.split(' ').map { |c| "command=#{c}"}).join('&')
+      kubeclient_options = { headers: @headers, tls: options[:tls] }
+
+      url.query = (options.filter { |k| ![:suppress_errors, :tls].include?(k) }.compact.map { |k, v| "#{k}=#{v}"} << command.split(' ').map { |c| "command=#{c}"}).join('&')
 
       if url.to_s.start_with?('https')
         url = "wss" + url.to_s[5..-1]
@@ -31,11 +38,11 @@ module KubeclientExec
 
       EM.run do
         executor = if block_given?
-            Executor.new(command, url, ssl_options, options) do |executor|
+            Executor.new(command, url, kubeclient_options, options) do |executor|
               block.call(executor)
             end
         else
-            Executor.new(command, url, ssl_options, options.merge!(mode: :adhoc))
+            Executor.new(command, url, kubeclient_options, options.merge!(mode: :adhoc))
         end
 
         EM.add_shutdown_hook do

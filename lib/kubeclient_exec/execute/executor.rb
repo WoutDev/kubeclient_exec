@@ -9,14 +9,13 @@ module KubeclientExec
       EXEC_STDOUT = 1
       EXEC_STDERR = 2
       EXEC_DCKERR = 3 # Not sure about this one
-      NOOP_PROC = -> {}
 
-      attr_reader :last_stdout, :last_stderr, :last_command, :suppress_errors
+      attr_reader :last_stdout, :last_stderr, :last_command
 
-      def initialize(command, url, ssl_options, options, &block)
+      def initialize(command, url, kubeclient_options, options, &block)
         @last_command = command
         @url = url
-        @ssl_options = ssl_options
+        @kubeclient_options = kubeclient_options
         @options = options
         @on_open = block
         @suppress_errors = options[:suppress_errors]
@@ -69,12 +68,11 @@ module KubeclientExec
       def setup
         @ws = Faye::WebSocket::Client.new(@url, nil, {
           ping: 10,
+          headers: @kubeclient_options[:headers],
           tls: {
-            cert: @ssl_options[:client_cert].to_pem,
-            cert_chain_file: "/home/wout/.kube/docker-desktop.crt",
-            private_key: @ssl_options[:client_key].private_to_pem,
-            private_key_file: "/home/wout/.kube/docker-desktop.key",
-            verify_peer: false,
+            cert_chain_file: @kubeclient_options[:tls][:cert_chain_file],
+            private_key_file: @kubeclient_options[:tls][:private_key_file],
+            verify_peer: @kubeclient_options[:tls][:verify_peer],
           }
         })
 
