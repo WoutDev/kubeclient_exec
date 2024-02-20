@@ -8,7 +8,7 @@ module KubeclientExec
       EXEC_STDIN = 0
       EXEC_STDOUT = 1
       EXEC_STDERR = 2
-      EXEC_DCKERR = 3 # Not sure about this one
+      EXEC_DCKERR = 3 # Seems like this is used for docker errors
 
       attr_reader :last_stdout, :last_stderr, :last_command
 
@@ -67,7 +67,7 @@ module KubeclientExec
       private
       def setup
         @ws = Faye::WebSocket::Client.new(@url, nil, {
-          ping: 10,
+          ping: 10, # TODO: this is arbitrary
           headers: @kubeclient_options[:headers],
           tls: {
             cert_chain_file: @kubeclient_options[:tls][:cert_chain_file],
