@@ -9,7 +9,7 @@ module KubeclientExec
     DEFAULT_CP_OPTIONS = {
       container: nil,
       reverse_direction: false,
-      suppress_errors: true,
+      suppress_errors: false,
       tls: {
         cert_chain_file: nil,
         private_key_file: nil,

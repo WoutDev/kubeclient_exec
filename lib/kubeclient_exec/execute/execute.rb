@@ -10,7 +10,7 @@ module KubeclientExec
       stdout: true,
       stderror: true,
       tty: true,
-      suppress_errors: true,
+      suppress_errors: false,
       tls: {
         cert_chain_file: nil,
         private_key_file: nil,
