@@ -82,9 +82,9 @@ client.cp_pod('.', "/home/interesting-results", "my-pod", "my-namespace", option
 Both bearer tokens and user certificates should be supported. However, in case user certificates are used, you should pass the certificate and key *file locations* into `options[:tls][:[:cert_chain_file]` and `options[:tls][:private_key_file]` respectively. This is a limitation of EventMachine.
 
 # Troubleshooting
-**Problem:** Nothing is happening, but I don't see an error.
+**Problem:** Can I suppress errors?
 
-You can disable the `suppress_errors` option in the `options` hash.
+You can enable the `suppress_errors` option in the `options` hash.
 
 **Problem:** I want to disable TLS peer verification.
 
