@@ -10,4 +10,8 @@ Gem::Specification.new do |s|
   s.homepage      = 'https://github.com/WoutDev/kubeclient_exec'
   s.add_runtime_dependency 'kubeclient', '~> 4.11.0'
   s.add_runtime_dependency 'faye-websocket', '~> 0.11.3'
+  s.metadata      = {
+    'homepage_uri' => 'https://github.com/WoutDev/kubeclient_exec',
+    'source_code_uri' => 'https://github.com/WoutDev/kubeclient_exec',
+  }
 end
