@@ -57,11 +57,19 @@ module KubeclientExec
       def stop
         @ws.close if @ws
         @on_close.call if @on_close
+      end
+
+      def stop!
+        stop
         EM.stop_event_loop
       end
 
       def done?
         @ws.instance_variable_get(:@driver).instance_variable_get(:@queue).empty?
+      end
+
+      def ready_state
+        @ws.ready_state
       end
 
       private
@@ -78,7 +86,7 @@ module KubeclientExec
 
         @ws.on(:message) do |msg|
           if msg.type == :close
-            stop
+            stop!
             return
           end
 
@@ -91,7 +99,7 @@ module KubeclientExec
             if @options[:mode] == :adhoc
               @last_stdout = 1 if type == EXEC_STDOUT
               @last_stderr = 1 if type == EXEC_STDERR || EXEC_DCKERR
-              stop
+              stop!
             end
           end
 
@@ -112,7 +120,7 @@ module KubeclientExec
         end
 
         @ws.on(:close) do
-          stop
+          stop!
         end
 
         @ws.on(:open) do

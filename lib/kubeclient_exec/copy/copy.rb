@@ -45,9 +45,15 @@ module KubeclientExec
           executor.write(tar_file.string)
 
           # Feels like there should be a better way for this
+          stopping = false
           EM.add_periodic_timer(0.1) do
-            if executor.done?
+            if executor.done? && !stopping
+              stopping = true
               executor.stop
+            end
+
+            if executor.ready_state == 3
+              EM.stop_event_loop
             end
           end
         end
@@ -56,9 +62,15 @@ module KubeclientExec
           executor.write(tar_file.string)
 
           # Feels like there should be a better way for this
+          stopping = false
           EM.add_periodic_timer(0.1) do
-            if executor.done?
+            if executor.done? && !stopping
+              stopping = true
               executor.stop
+            end
+
+            if executor.ready_state == 3
+              EM.stop_event_loop
             end
           end
         end
@@ -70,18 +82,22 @@ module KubeclientExec
 
       exec_pod("tar cf - #{remote_path}", name, namespace, options: { tty: false }.merge!(options)) do |executor|
         count = 0
+        content = ''
 
         executor.on_stdout do |data|
-          if count == 1
-            if local_path.is_a? String
-              untar(StringIO.new(data), local_path)
-            elsif local_path == :single_result
-              result = single_untar(StringIO.new(data))
-            end
-            executor.stop
+          if count >= 1
+            content += data
           end
 
           count += 1
+        end
+
+        executor.on_close do
+          if local_path.is_a? String
+            untar(StringIO.new(content), local_path)
+          elsif local_path == :single_result
+            result = single_untar(StringIO.new(content))
+          end
         end
       end
 
