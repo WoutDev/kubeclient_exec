@@ -42,7 +42,10 @@ module KubeclientExec
 
       if copy_file
         exec_pod("tar xf - -C #{remote_path.split('/')[0...-1].join('/')}", name, namespace, options: { tty: false }.merge!(options)) do |executor|
-          executor.write(tar_file.string)
+          chunks = split_string_into_chunks(tar_file.string, 1024 * 1024) # 1MB
+          chunks.each do |chunk|
+            executor.write(chunk)
+          end
 
           # Feels like there should be a better way for this
           stopping = false
@@ -102,6 +105,20 @@ module KubeclientExec
       end
 
       result
+    end
+
+    private
+    def split_string_into_chunks(string, chunk_size)
+      chunks = []
+      start_index = 0
+
+      while start_index < string.length
+        chunk = string[start_index, chunk_size]
+        chunks << chunk
+        start_index += chunk_size
+      end
+
+      chunks
     end
   end
 end

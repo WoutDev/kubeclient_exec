@@ -55,7 +55,7 @@ module KubeclientExec
       end
 
       def stop
-        @ws.close if @ws
+        @ws.instance_variable_get(:@stream).close_connection_after_writing
         @on_close.call if @on_close
       end
 
@@ -81,7 +81,8 @@ module KubeclientExec
             cert_chain_file: @kubeclient_options[:tls][:cert_chain_file],
             private_key_file: @kubeclient_options[:tls][:private_key_file],
             verify_peer: @kubeclient_options[:tls][:verify_peer],
-          }
+          },
+          max_length: 2**32,
         })
 
         @ws.on(:message) do |msg|
