@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'kubeclient_exec'
-  s.version       = '0.1.1'
+  s.version       = '0.1.2'
   s.licenses      = ['MIT']
   s.summary       = 'An extension to the kubeclient gem that adds exec_pod and cp_pod functionality.'
   s.authors       = ['Wout Ceulemans']
@@ -11,7 +11,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'kubeclient', '~> 4.11.0'
   s.add_runtime_dependency 'faye-websocket', '~> 0.11.3'
   s.metadata      = {
-    'homepage_uri' => 'https://github.com/WoutDev/kubeclient_exec',
     'source_code_uri' => 'https://github.com/WoutDev/kubeclient_exec',
   }
 end
