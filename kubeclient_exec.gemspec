@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'kubeclient_exec'
-  s.version       = '0.1.2'
+  s.version       = '0.1.3'
   s.licenses      = ['MIT']
   s.summary       = 'An extension to the kubeclient gem that adds exec_pod and cp_pod functionality.'
   s.authors       = ['Wout Ceulemans']
