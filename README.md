@@ -1,7 +1,5 @@
 # kubeclient_exec
-A simple gem adding `exec_pod` and `cp_pod` functionality to [Kubeclient](https://github.com/ManageIQ/kubeclient).
-
-Note: this is a 1 to 2 day ish project, use at your own risk.
+A simple gem adding `exec_pod` and `cp_pod` functionality to [Kubeclient](https://github.com/ManageIQ/kubeclient). 
 
 # Installation
 Add this line to your Gemfile:
@@ -80,6 +78,8 @@ client.cp_pod('.', "/home/interesting-results", "my-pod", "my-namespace", option
 
 ## Authentication
 Both bearer tokens and user certificates should be supported. However, in case user certificates are used, you should pass the certificate and key *file locations* into `options[:tls][:[:cert_chain_file]` and `options[:tls][:private_key_file]` respectively. This is a limitation of EventMachine.
+
+**Note:** Since ```v0.2.0``` you can pass certificate and key information directly **if** you are using at the ```e7320417cf291cc6a69471a64ecae5ddb5367715``` (or later) commit of the ```eventmachine``` GitHub repository. This is a feature that has been added to ```eventmachine```, but not yet released to Rubygems. You pass the PEM-encoded format certificate and key directly to `options[:tls][:cert]` and `options[:tls][:private_key]`.
 
 # Troubleshooting
 **Problem:** Can I suppress errors?
