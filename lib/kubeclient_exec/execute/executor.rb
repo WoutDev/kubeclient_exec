@@ -79,7 +79,9 @@ module KubeclientExec
           headers: @kubeclient_options[:headers],
           tls: {
             cert_chain_file: @kubeclient_options[:tls][:cert_chain_file],
+            cert: @kubeclient_options[:tls][:cert],
             private_key_file: @kubeclient_options[:tls][:private_key_file],
+            private_key: @kubeclient_options[:tls][:private_key],
             verify_peer: @kubeclient_options[:tls][:verify_peer],
           },
           max_length: 2**32,

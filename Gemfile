@@ -2,6 +2,7 @@
 
 source "https://rubygems.org"
 
-gem 'kubeclient', '~> 4.11.0'
+gemspec
 
-gem 'faye-websocket', '~> 0.11.3'
+# Support for file-less TLS authentication is not yet released... using ref instead.
+gem 'eventmachine', git: 'https://github.com/eventmachine/eventmachine', ref: 'e7320417cf291cc6a69471a64ecae5ddb5367715'
