@@ -12,7 +12,9 @@ module KubeclientExec
       suppress_errors: false,
       tls: {
         cert_chain_file: nil,
+        cert: nil,
         private_key_file: nil,
+        private_key: nil,
         verify_peer: true
       }
     }
